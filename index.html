@@ -690,7 +690,7 @@
       if (dots === '') {
         currentIndex = (currentIndex + 1) % campaigns.length;
       }
-    }, 500);
+    }, 800); //500
 
     // Fade out loading screen and initialize game
     setTimeout(() => {
@@ -700,11 +700,11 @@
       
       setTimeout(() => {
         loadingScreen.style.display = 'none';
-      }, 800);
+      }, 150); //800
       
       const game = new Game();
       game.start();
-    }, 9000);
+    }, 9000); //3000
   </script>
 </body>
 </html>
