@@ -1,0 +1,710 @@
+<html>
+<head>
+  <title>Estrategia Grid</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', 'Arial', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      color: #e0e0e0;
+      background-color: #ffdcdc;
+      background-attachment: fixed;
+      text-align: center; 
+    }
+
+    .container {
+      background-color: rgba(0, 0, 0, 0.541);
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+      padding: 30px;
+      max-width: 1300px;
+      width: 100%;
+    }
+
+    h1 {
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      font-weight: bold;
+      text-shadow: 0 4px 6px rgba(0,0,0,0.3);
+      border-bottom: 3px solid #ff2121;
+      padding-bottom: 15px;
+      background: linear-gradient(to right, rgb(0, 95, 204),rgb(255, 255, 255), rgb(255, 217, 0),rgb(255, 255, 255), rgb(0, 95, 204));
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+
+    #mission-ui {
+      text-align: center;
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      color: #000000e5;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #mission-ui h2 {
+      color: #fff;
+      margin-bottom: 8px;
+      font-size: 1.5em;
+    }
+
+    #mission-ui h3 {
+      color: #bdc3c7;
+      margin-bottom: 12px;
+      font-size: 1.2em;
+    }
+
+    #mission-ui p {
+      color: #95a5a6;
+      margin-bottom: 15px;
+      font-size: 1em;
+    }
+
+    #next-mission-button {
+      padding: 10px 20px;
+      font-size: 14px;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      display: block;
+      margin: 0 auto;
+    }
+
+    #next-mission-button:hover {
+      background-color: #2980b9;
+    }
+
+    #game-container {
+      border: 2px solid #34495e;
+      box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+      background-color: #fff;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+      width: fit-content; 
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #grid {
+      display: grid;
+      grid-template-columns: repeat(12, 55px);
+      grid-template-rows: repeat(12, 55px);
+      gap: 3px;
+      background-color: rgba(0, 0, 0, 0.3);
+      padding: 3px;
+      border: 3px solid #494e53;
+      max-width: 100%;
+      margin: 0 auto;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    #grid::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5); /* Overlay oscuro para mejorar visibilidad */
+      pointer-events: none;
+    }
+
+    /* Fondos para Guerra de Independencia */
+    #grid.mision-cabildo {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Cabildo_de_Buenos_Aires_%28Argentina%29_2.jpg/1200px-Cabildo_de_Buenos_Aires_%28Argentina%29_2.jpg');
+    }
+
+    #grid.mision-andes {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2a/Crossing_of_the_Andes.jpg/1200px-Crossing_of_the_Andes.jpg');
+    }
+
+    #grid.mision-chacabuco {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/8/8a/Batalla_de_Chacabuco.jpg/1200px-Batalla_de_Chacabuco.jpg');
+    }
+
+    #grid.mision-cancha-rayada {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Sorpresa_de_Cancha_Rayada.jpg/1200px-Sorpresa_de_Cancha_Rayada.jpg');
+    }
+
+    #grid.mision-maipu {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/5/5e/Batalla_de_Maip%C3%BA.jpg/1200px-Batalla_de_Maip%C3%BA.jpg');
+    }
+
+    /* Fondos para Guerra Civil */
+    #grid.mision-buenos-aires {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/1/1a/Buenos_Aires_Antiguo.jpg/1200px-Buenos_Aires_Antiguo.jpg');
+    }
+
+    #grid.mision-el-tala {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/a/a8/Batalla_del_Tala.jpg/1200px-Batalla_del_Tala.jpg');
+    }
+
+    /* Fondos para Guerra del Paraguay */
+    #grid.mision-infiltracion {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/f/f9/Guerra_del_Paraguay.jpg/1200px-Guerra_del_Paraguay.jpg');
+    }
+
+    /* Fondos para Guerra de Malvinas */
+    #grid.mision-desembarco {
+      background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Desembarco_en_Malvinas.jpg/1200px-Desembarco_en_Malvinas.jpg');
+    }
+
+    .cell {
+      aspect-ratio: 1;
+      background-color: rgba(0, 0, 0, 0.6);
+      border: 1px solid #000000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-size: 10px;
+      color: #e0e0e0;
+    }
+
+    .cell:hover {
+      background-color: rgba(119, 119, 119, 0.8);
+      transform: scale(1.05);
+      z-index: 10;
+    }
+
+    .unit {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      position: relative;
+      font-weight: bold;
+      text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+      font-size: 0.9em;
+    }
+
+    .player-unit {
+      background-color: rgba(76, 175, 80, 0.3);
+      border-color: #4CAF50;
+    }
+
+    .player-unit:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      box-shadow: 0 5px 15px rgb(0, 0, 0);
+    }
+
+    .ai-unit {
+      background-color: rgba(255, 87, 34, 0.3);
+      border-color: #F44336;
+    }
+
+    .ai-unit:hover {
+      transform: scale(1.15);
+      z-index: 10;
+      box-shadow: 0 5px 15px rgb(0, 0, 0);
+    }
+
+    .movable {
+      background-color: #2ecc71;
+    }
+
+    .selected {
+      border: 3px solid #f39c12;
+    }
+
+    .move-range-display, .health-display {
+      font-size: 0.7em;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 2px 4px;
+      border-radius: 4px;
+      font-weight: normal;
+    }
+
+    #info {
+      margin-bottom: 20px;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      color: #000000e5;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    #info p {
+      font-size: 16px;
+      margin: 4px 0;
+    }
+
+    #info span {
+      font-weight: bold;
+      color: #fff;
+    }
+
+    #unit-info {
+      display: flex;
+      justify-content: space-around;
+      width: 80%;
+      margin-bottom: 20px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .unit-card {
+      width: 45%;
+      padding: 15px;
+      background-color: rgba(0, 0, 0, 0.233);
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      border-left: 4px solid #14b119;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .unit-card h3 {
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .unit-card p {
+      color: #95a5a6;
+      margin: 5px 0;
+    }
+
+    .unit-info-item {
+      background-color: rgba(0, 0, 0, 0.274);
+      border-radius: 6px;
+      padding: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      transition: transform 0.3s ease;
+    }
+
+    .unit-info-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .unit-info-item h4 {
+      margin-top: 0;
+      color: #e0e0e0;
+      border-bottom: 2px solid rgba(219, 219, 219, 0.3);
+      padding-bottom: 5px;
+    }
+
+    .unit-info-item p {
+      color: #ccc;
+    }
+
+    .warrior {
+      background-color: #4CAF50; 
+    }
+
+    .archer {
+      background-color: #F44336; 
+    }
+
+    .mage {
+      background-color: #9C27B0; 
+    }
+
+    .knight {
+      background-color: #607D8B; 
+    }
+
+    .cleric {
+      background-color: #FFEB3B; 
+      color: black;
+    }
+
+    .grunt {
+      background-color: #795548; 
+    }
+
+    .rogue {
+      background-color: #00BCD4; 
+    }
+
+    .berserker {
+      background-color: #E64A19; 
+    }
+
+    .assassin {
+      background-color: #3F51B5; 
+    }
+
+    .darkKnight {
+      background-color: #212121; 
+    }
+
+    /* Patriot units */
+    .oficialCriollo { background-color: #4CAF50; }
+    .milicianoArmado { background-color: #388E3C; }
+    .milicianoLancero { background-color: #2E7D32; }
+    .artilleroPorteno { background-color: #1B5E20; }
+    .espiaRevolucionario { background-color: #43A047; }
+    
+    .sanMartin { background-color: #00C853; }
+    .guiaAndino { background-color: #00E676; }
+    .granaderoACaballo { background-color: #69F0AE; }
+    .infanteriaLigera { background-color: #B9F6CA; }
+    .medicoCampana { background-color: #A5D6A7; }
+    
+    /* Royalist units */
+    .oficialEspanol { background-color: #F44336; }
+    .soldadoRegular { background-color: #E53935; }
+    .dragonReina { background-color: #D32F2F; }
+    .granaderoRealista { background-color: #C62828; }
+    .tiradorGallego { background-color: #B71C1C; }
+    
+    .comandanteRealista { background-color: #FF5252; }
+    .guerrilleroMapuche { background-color: #FF1744; }
+    .cazadorMontana { background-color: #D50000; }
+    .infanteRealista { background-color: #FF8A80; }
+    .exploradorRealista { background-color: #FF5252; }
+
+    /* Guerra Civil Units - Federales */
+    .caudilloFederal { background-color: #8B0000; }
+    .milicianoLanza { background-color: #A52A2A; }
+    .infanteRural { background-color: #B22222; }
+    .artilleroMontonero { background-color: #CD5C5C; }
+    .espiaFederal { background-color: #DC143C; }
+
+    .caudilloMontonero { background-color: #8B0000; }
+    .lanceroCaballo { background-color: #A52A2A; }
+    .infanteMonte { background-color: #B22222; }
+    .tiradorFederal { background-color: #CD5C5C; }
+    .exploradorAvanzada { background-color: #DC143C; }
+
+    /* Guerra Civil Units - Unitarios */
+    .oficialUnitario { background-color: #00008B; }
+    .infantePorteno { background-color: #0000CD; }
+    .guardiaCiudad { background-color: #0000FF; }
+    .tiradorAzotea { background-color: #1E90FF; }
+    .artilleroUnitario { background-color: #4169E1; }
+
+    .coronelUnitario { background-color: #00008B; }
+    .dragonLinea { background-color: #0000CD; }
+    .fusileroUnitario { background-color: #0000FF; }
+    .tiradorSelva { background-color: #1E90FF; }
+    .artilleroMovil { background-color: #4169E1; }
+
+    /* Add new unit type styles */
+    .comandoOperaciones { background-color: #336699; }
+    .francotiradorRecon { background-color: #4477AA; }
+    .operadorDrones { background-color: #5588BB; }
+    .zapadorExploracion { background-color: #6699CC; }
+    .espiaEncubierto { background-color: #77AADD; }
+  
+    .guardiaPerimetro { background-color: #993333; }
+    .francotiradorVigilancia { background-color: #AA4444; }
+    .operadorRadar { background-color: #BB5555; }
+    .unidadReaccion { background-color: #CC6666; }
+    .perrosRastreadores { background-color: #DD7777; }
+
+    /* Update campaign-specific styles */
+    .guerra-paraguay {
+      background-color: #7c9aa8;
+    }
+  
+    .guerra-paraguay h1 {
+      border-bottom-color: #22759b;
+    }
+
+    /* Add new unit styles for Malvinas units */
+    .comandanteAnfibio { background-color: #2E7D32; }
+    .infanteMarina { background-color: #388E3C; }
+    .zapadorCombate { background-color: #43A047; }
+    .fusileroAvanzada { background-color: #4CAF50; }
+    .comunicacionesElectronicas { background-color: #66BB6A; }
+
+    .comandanteDefensa { background-color: #B71C1C; }
+    .royalMarine { background-color: #C62828; }
+    .francotiradorVigilancia { background-color: #D32F2F; }
+    .explosivistaDefensa { background-color: #E53935; }
+    .operadorRadio { background-color: #EF5350; }
+
+    /* Add styles for other Malvinas units following the same pattern */
+    .comandanteResistencia { background-color: #1B5E20; }
+    .tiradorFAL { background-color: #2E7D32; }
+    .artilleroMortero { background-color: #388E3C; }
+    .ametralladorista { background-color: #43A047; }
+    .explorador { background-color: #4CAF50; }
+
+    /* Loading animation styles - Enhanced version */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.8s ease-out;
+    }
+
+    .loading-screen.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-animation {
+      width: 200px;
+      height: 200px;
+      position: relative;
+      margin-bottom: 30px;
+      animation: rotateMain 10s linear infinite;
+    }
+
+    .loading-circle {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border: 8px solid transparent;
+      border-radius: 50%;
+      animation: rotate 3s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    }
+
+    .circle1 {
+      border-top-color: #4CAF50;
+      animation-delay: 0s;
+      filter: drop-shadow(0 0 10px #4CAF50);
+    }
+
+    .circle2 {
+      width: 80%;
+      height: 80%;
+      top: 10%;
+      left: 10%;
+      border-right-color: #F44336;
+      animation-delay: 0.5s;
+      filter: drop-shadow(0 0 10px #F44336);
+    }
+
+    .circle3 {
+      width: 60%;
+      height: 60%;
+      top: 20%;
+      left: 20%;
+      border-bottom-color: #2196F3;
+      animation-delay: 1s;
+      filter: drop-shadow(0 0 10px #2196F3);
+    }
+
+    .loading-text {
+      color: white;
+      font-size: 28px;
+      font-family: 'Roboto', sans-serif;
+      text-align: center;
+      animation: pulse 2s ease-in-out infinite;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      margin-top: 20px;
+    }
+
+    .campaign-text {
+      color: #bbb;
+      font-size: 20px;
+      margin-top: 15px;
+      font-style: italic;
+      opacity: 0.8;
+      animation: fadeInOut 3s ease-in-out infinite;
+    }
+
+    @keyframes rotate {
+      0% {
+        transform: rotate(0deg) scale(1);
+      }
+      50% {
+        transform: rotate(180deg) scale(1.2);
+      }
+      100% {
+        transform: rotate(360deg) scale(1);
+      }
+    }
+
+    @keyframes rotateMain {
+      0% {
+        transform: perspective(1000px) rotateY(0deg);
+      }
+      100% {
+        transform: perspective(1000px) rotateY(360deg);
+      }
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        opacity: 0.6;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.05);
+      }
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% {
+        opacity: 0.3;
+        transform: translateY(0);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-5px);
+      }
+    }
+
+    .content {
+      opacity: 0;
+      transition: opacity 1.5s ease-in;
+      transform: translateY(20px);
+      animation: slideUp 1.5s ease-out forwards;
+    }
+
+    .content.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @keyframes slideUp {
+      from {
+        transform: translateY(20px);
+        opacity: 0;
+      }
+      to {
+        transform: translateY(0);
+        opacity: 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen - Enhanced version -->
+  <div class="loading-screen">
+    <div class="loading-animation">
+      <div class="loading-circle circle1"></div>
+      <div class="loading-circle circle2"></div>
+      <div class="loading-circle circle3"></div>
+    </div>
+    <div class="loading-text">
+      Preparando el Campo de Batalla
+      <div class="campaign-text">
+        <span id="loading-campaign"></span>
+      </div>
+    </div>
+  </div>
+  <!-- Main Content -->
+  <div class="content">
+    <div class="container">
+      <h1>Estrategia Grid</h1>
+
+      <div id="mission-ui">
+        <h2> <span id="campaign-name"></span></h2>
+        <h3>Misión: <span id="mission-number"></span></h3>
+        <p id="mission-description"></p>
+        <button id="next-mission-button">Siguiente Misión</button>
+      </div>
+
+      <div id="unit-info">
+        <div class="unit-card" id="player-unit-card">
+          <h3>Unidad Jugador</h3>
+          <!-- Unit info will be dynamically added here -->
+        </div>
+
+        <div class="unit-card" id="ai-unit-card">
+          <h3>Unidad IA</h3>
+          <!-- Unit info will be dynamically added here -->
+        </div>
+      </div>
+
+      <div id="game-container">
+        <div id="grid"></div>
+      </div>
+
+      <div id="info">
+        <p>Turno: <span id="turn">Jugador</span></p>
+        <p>Acción: <span id="action">Mover</span></p>
+      </div>
+    </div>
+  </div>
+
+  <script src="grid.js"></script>
+  <script src="units.js"></script>
+  <script src="ai.js"></script>
+  <script src="game.js"></script>
+  <script>
+    // Enhanced loading animation logic
+    const loadingScreen = document.querySelector('.loading-screen');
+    const content = document.querySelector('.content');
+    const loadingCampaign = document.getElementById('loading-campaign');
+    
+    const campaigns = [
+      "Guerra de Independencia (1810-1818)",
+      "Guerra Civil (1828-1831)",
+      "Guerra del Paraguay (1864-1870)",
+      "Guerra de Malvinas (1982)"
+    ];
+    
+    let currentIndex = 0;
+    let dots = '';
+    
+    // Change campaign name and add animated dots
+    const campaignInterval = setInterval(() => {
+      dots = dots.length < 3 ? dots + '.' : '';
+      loadingCampaign.textContent = campaigns[currentIndex] + dots;
+      
+      if (dots === '') {
+        currentIndex = (currentIndex + 1) % campaigns.length;
+      }
+    }, 500);
+
+    // Fade out loading screen and initialize game
+    setTimeout(() => {
+      clearInterval(campaignInterval);
+      loadingScreen.classList.add('fade-out');
+      content.classList.add('fade-in');
+      
+      setTimeout(() => {
+        loadingScreen.style.display = 'none';
+      }, 800);
+      
+      const game = new Game();
+      game.start();
+    }, 4000);
+  </script>
+</body>
+</html>
